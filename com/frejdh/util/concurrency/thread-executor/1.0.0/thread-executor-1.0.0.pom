@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.frejdh.util</groupId>
+        <artifactId>library-master-pom</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <groupId>com.frejdh.util.concurrency</groupId>
+    <artifactId>thread-executor</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+
+        <!-- Deployment for artifacts -->
+        <github.repository.owner>Frejdh</github.repository.owner>
+        <github.repository.name>mvn-lib-thread-executor</github.repository.name>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
+            <version>2.3.1.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>com.frejdh.util.common</groupId>
+            <artifactId>ansi-logger</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.frejdh.util.common</groupId>
+            <artifactId>annotations</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin> <!-- Optional. Push artifact and files to github upon mvn deploy -->
+                <inherited>false</inherited>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.11</version>
+
+                <executions> <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
+                    <execution> <!-- Package and push .jar file as a release, available for direct download on github -->
+                        <id>github-site-to-artifact</id>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                        <configuration>
+                            <message>Maven artifact for ${project.version}</message> <!-- Git commit message -->
+                            <noJekyll>true</noJekyll><!-- Disable webpage processing -->
+                            <outputDirectory>${project.build.directory}/${github.deploy.branch}</outputDirectory> <!-- Matches distribution management repository url above -->
+                            <branch>${github.ref.release.jar}/${project.version}</branch> <!-- Remote branch name (maven repository) -->
+                            <includes>
+                                <include>**/*</include>
+                            </includes>
+                            <repositoryOwner>${github.repository.owner}</repositoryOwner> <!-- Organization or username  -->
+                            <repositoryName>${github.repository.name}</repositoryName> <!-- Github repo name -->
+                        </configuration>
+                    </execution>
+
+                    <execution> <!-- Upload files to a specific branch used as a maven repository -->
+                        <id>github-site-to-branch</id>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                        <configuration>
+                            <message>Maven artifact for ${project.version}</message> <!-- Git commit message -->
+                            <noJekyll>true</noJekyll><!-- Disable webpage processing -->
+                            <outputDirectory>${project.build.directory}/${github.deploy.branch}</outputDirectory> <!-- Matches distribution management repository url above -->
+                            <branch>${github.ref.release.branch}/${github.deploy.branch}</branch> <!-- Remote branch name (maven repository) -->
+                            <includes>
+                                <include>**/*</include>
+                            </includes>
+                            <repositoryOwner>${github.repository.owner}</repositoryOwner> <!-- Organization or username  -->
+                            <repositoryName>${github.repository.name}</repositoryName> <!-- Github repo name -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>library-master-pom</id>
+            <url>https://raw.github.com/Frejdh/mvn-lib-master/mvn-repo/</url>
+        </repository>
+        <repository>
+            <id>mvn-lib-common-ansi-logger</id>
+            <url>https://raw.github.com/Frejdh/mvn-lib-ansi-logger/mvn-repo/</url>
+        </repository>
+        <repository>
+            <id>mvn-lib-annotations</id>
+            <url>https://raw.github.com/Frejdh/mvn-lib-annotations/mvn-repo/</url>
+        </repository>
+    </repositories>
+
+</project>
