@@ -19,8 +19,8 @@ All the other available classes can be found [here](https://github.com/frejdh/mv
 
 <repositories> <!-- Required in order to resolve this package -->
     <repository>
-        <id>mvn-lib-common-ansi-logger</id>
-        <url>https://raw.github.com/Frejdh/mvn-lib-common-toolbox/mvn-repo/</url>
+        <id>mvn-lib-thread-executor</id>
+        <url>https://raw.github.com/Frejdh/mvn-lib-thread-executor/mvn-repo/</url>
     </repository>
 </repositories>
 ```
